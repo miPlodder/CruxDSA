@@ -1,15 +1,35 @@
 package HeapDSGeneric;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+//this will not work for Integer Class
 public class Heap<T extends Comparable<T>> {
 
-	ArrayList<T> list;
-	
+	private ArrayList<T> list;
+	private HashMap<T, Integer> posMap;
+
 	public Heap() {
 
-		list = new ArrayList<>();
-		
+		this.list = new ArrayList<>();
+		this.posMap = new HashMap<>();
+
+	}
+
+	public Heap(T[] arr) {
+
+		this();
+
+		for (T val : arr) {
+
+			this.list.add(val);
+			this.posMap.put(val, this.list.size() - 1);
+
+		}
+
+		for (int i = this.size() - 1; i >= 0; i--) {
+			this.downHeapify(i);
+		}
 
 	}
 
@@ -31,7 +51,7 @@ public class Heap<T extends Comparable<T>> {
 
 	}
 
-	//get HighestPriority
+	// get HighestPriority
 	public T getHP() {
 
 		return this.list.get(0);
@@ -44,8 +64,10 @@ public class Heap<T extends Comparable<T>> {
 		// first swap then remove
 		this.swap(0, this.list.size() - 1);
 		this.list.remove(this.list.size() - 1);
+		this.posMap.remove(root);
+
+		// ---------------------------------
 		this.downHeapify(0);
-		
 
 		return root;
 	}
@@ -53,9 +75,9 @@ public class Heap<T extends Comparable<T>> {
 	// downheapify
 	private void downHeapify(int pi) {
 
-		//left child index
+		// left child index
 		int lci = (2 * pi) + 1;
-		//right child index
+		// right child index
 		int rci = lci + 1;
 
 		int maxI = pi;
@@ -84,9 +106,11 @@ public class Heap<T extends Comparable<T>> {
 	public void add(T data) {
 
 		this.list.add(data);
-		
+
+		this.posMap.put(data, this.list.size() - 1);
+
 		this.upHeapify(list.size() - 1);
-	
+
 	}
 
 	// upheapify
@@ -98,26 +122,40 @@ public class Heap<T extends Comparable<T>> {
 
 		int pi = (ci - 1) / 2;
 
-		if (this.list.get(ci).compareTo(this.list.get(pi)) < 0) {
+		if (this.list.get(ci).compareTo(this.list.get(pi)) > 0) {
 
 			this.swap(ci, pi);
 			this.upHeapify(pi);
 
-		} else {
-			// do nothing
 		}
-
 	}
 
-	// swapping -------------------------------------------------------------------problem
+	// swapping
+	// -------------------------------------------------------------------problem
 	private void swap(int i, int j) {
 
 		T ith = list.get(i);
 		T jth = list.get(j);
-		
-		list.add(i, jth);
-		list.add(j, ith);
+
+		this.posMap.put(ith, j);
+		this.posMap.put(jth, i);
+
+		this.list.set(i, jth);
+		this.list.set(j, ith);
 
 	}
-	
+
+	// update data
+	public void handleUpdatePriority(T node) {
+
+		// o(1)
+		int index = this.posMap.get(node);
+
+		System.out.println("SIZE->"+this.posMap.size() + " SIZE2-->"+this.list.size());
+		// o(logn)
+		this.upHeapify(index);
+		this.downHeapify(index);
+
+	}
+
 }
