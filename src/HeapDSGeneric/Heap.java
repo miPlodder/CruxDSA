@@ -4,33 +4,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 //this will not work for Integer Class
+//priority queue is implemented using binary tree 
+
 public class Heap<T extends Comparable<T>> {
 
 	private ArrayList<T> list;
 	private HashMap<T, Integer> posMap;
 
 	public Heap() {
-
 		this.list = new ArrayList<>();
 		this.posMap = new HashMap<>();
-
 	}
 
 	public Heap(T[] arr) {
 
 		this();
-
 		for (T val : arr) {
-
 			this.list.add(val);
 			this.posMap.put(val, this.list.size() - 1);
-
 		}
-
 		for (int i = this.size() - 1; i >= 0; i--) {
 			this.downHeapify(i);
 		}
-
 	}
 
 	public int size() {
@@ -40,6 +35,7 @@ public class Heap<T extends Comparable<T>> {
 	}
 
 	public void display() {
+
 
 		System.out.println(list);
 
@@ -151,7 +147,7 @@ public class Heap<T extends Comparable<T>> {
 		// o(1)
 		int index = this.posMap.get(node);
 
-		System.out.println("SIZE->"+this.posMap.size() + " SIZE2-->"+this.list.size());
+		System.out.println("SIZE->" + this.posMap.size() + " SIZE2-->" + this.list.size());
 		// o(logn)
 		this.upHeapify(index);
 		this.downHeapify(index);
